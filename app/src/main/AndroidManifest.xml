@@ -16,6 +16,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".CategoriesActivity"></activity>
+        <activity android:name=".BooksActivity"></activity>
         <meta-data android:name="DATABASE" android:value="intents.db" />
         <meta-data android:name="VERSION" android:value="1" />
         <meta-data android:name="QUERY_LOG" android:value="true" />

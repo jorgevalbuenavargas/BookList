@@ -1,10 +1,12 @@
 package com.bookdepository.booklist;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -12,15 +14,19 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 
-import org.json.JSONObject;
+import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    public SingletonVolley volley;
-    public RequestQueue colaPeticiones;
     Button categoriesButton;
     Button favoritesButton;
 
@@ -29,35 +35,42 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        volley = SingletonVolley.getInstance(getApplicationContext());
-        colaPeticiones = volley.getRequestQueue();
-
         categoriesButton = findViewById(R.id.categoriesButton);
         favoritesButton = findViewById(R.id.favoritesButton);
-
-
     }
 
-    public void AgregarRequest(Request request) {
-        if (request != null) {
-            request.setTag("REQUEST_LOGIN");
-            if (colaPeticiones == null)
-                colaPeticiones = volley.getRequestQueue();
-            request.setRetryPolicy(new DefaultRetryPolicy(
-                    6000, 3, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
-            ));
-            colaPeticiones.add(request);
-        }
 
-    }
 
     public void getCategories(View v){
+        Intent myIntent = new Intent(MainActivity.this, CategoriesActivity.class);
+        startActivity(myIntent);
+    }
+
+    public void getFavorites(View v){
+
+    }
+
+    /*public void getFavorites(View v){
         String url = "http://www.etnassoft.com/api/v1/get/?id=589";
         StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String stringResult) {
-
-                Log.i("Llamado", stringResult);
+                String replaced_stringResult = stringResult.replace("([", "");
+                replaced_stringResult = replaced_stringResult.replace("]);", "");
+                replaced_stringResult = replaced_stringResult.replace("<strong>", "");
+                replaced_stringResult = replaced_stringResult.replace("</strong>;", "");
+                Gson newGson = new Gson();
+                Books selected_book = newGson.fromJson(replaced_stringResult, Books.class);
+                List<Tags> book_tags = selected_book.getTags();
+                String tags = "";
+                for (int i = 0; i < book_tags.size(); i++){
+                    if (!tags.isEmpty()){
+                        tags = tags + " ," + book_tags.get(i).getName();
+                    } else {
+                        tags = book_tags.get(i).getName();
+                    }
+                }
+                Log.i("Llamado", tags);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -67,5 +80,5 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         AgregarRequest(request);
-    }
+    }*/
 }
