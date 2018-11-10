@@ -60,8 +60,8 @@ public class MainActivity extends AppCompatActivity {
                 replaced_stringResult = replaced_stringResult.replace("<strong>", "");
                 replaced_stringResult = replaced_stringResult.replace("</strong>;", "");
                 Gson newGson = new Gson();
-                Books selected_book = newGson.fromJson(replaced_stringResult, Books.class);
-                List<Tags> book_tags = selected_book.getTags();
+                Books book_profile = newGson.fromJson(replaced_stringResult, Books.class);
+                List<Tags> book_tags = book_profile.getTags();
                 String tags = "";
                 for (int i = 0; i < book_tags.size(); i++){
                     if (!tags.isEmpty()){

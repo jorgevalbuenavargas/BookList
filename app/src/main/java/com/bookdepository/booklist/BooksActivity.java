@@ -104,7 +104,10 @@ public class BooksActivity extends AppCompatActivity implements AdapterView.OnIt
 
         BooksList adaptador = (BooksList) padre.getAdapter();
         Books selected_book = adaptador.getItem(posicion);
-        Log.i("Llamado", selected_book.getTitle());
+        String book_id = Integer.toString(selected_book.getID());
+        Intent myIntent = new Intent(this, BookProfile.class);
+        myIntent.putExtra("book_id", book_id);
+        startActivity(myIntent);
 
     }
 }

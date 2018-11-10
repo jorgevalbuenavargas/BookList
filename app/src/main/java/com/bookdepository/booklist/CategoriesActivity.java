@@ -72,7 +72,7 @@ public class CategoriesActivity extends AppCompatActivity implements AdapterView
 
                 CategoriesList adaptador = new CategoriesList(CategoriesActivity.this, R.layout.categories_list, found_categories);
 
-                ListView lstOpciones = (ListView)findViewById(R.id.categoriesList);
+                ListView lstOpciones = (ListView)findViewById(R.id.categoriesProfileText);
 
                 lstOpciones.setAdapter(adaptador);
 

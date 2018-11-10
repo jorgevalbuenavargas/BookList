@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <ListView
-        android:id="@+id/categoriesList"
+        android:id="@+id/categoriesProfileText"
         style="@style/Widget.AppCompat.ListView"
         android:layout_width="376dp"
         android:layout_height="453dp"
