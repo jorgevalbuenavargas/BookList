@@ -3,12 +3,18 @@ package com.bookdepository.booklist;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -28,6 +34,8 @@ import java.util.List;
 public class BookProfile extends AppCompatActivity {
     public SingletonVolley volley;
     public RequestQueue colaPeticiones;
+    FavoriteBooks foundFavoriteBook;
+    Books book_profile;
     TextView title;
     TextView author;
     TextView publisher;
@@ -38,6 +46,7 @@ public class BookProfile extends AppCompatActivity {
     TextView stringTags;
     TextView bookContent;
     ImageView bookPicture;
+    ImageButton stateButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +58,7 @@ public class BookProfile extends AppCompatActivity {
 
         Intent myIntent = getIntent();
         String book_id = myIntent.getStringExtra("book_id");
-
+        //Obtiene la información del libro
         getBook(book_id);
 
         title = findViewById(R.id.bookProfileTitle);
@@ -62,6 +71,7 @@ public class BookProfile extends AppCompatActivity {
         stringTags = findViewById(R.id.tagsProfileText);
         bookPicture = findViewById(R.id.imageProfile);
         bookContent = findViewById(R.id.contentProfileText);
+        stateButton = findViewById(R.id.bookStateButton);
     }
 
     public void regresar(View v){
@@ -85,17 +95,22 @@ public class BookProfile extends AppCompatActivity {
         StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String stringResult) {
+                // Elimina los caracteres inválidos del json
                 String replaced_stringResult = stringResult.replace("([", "");
                 replaced_stringResult = replaced_stringResult.replace("]);", "");
+
                 /*replaced_stringResult = replaced_stringResult.replace("<strong>", "");
                 replaced_stringResult = replaced_stringResult.replace("</strong>;", "");
                 replaced_stringResult = replaced_stringResult.replace("<li>", "");
                 replaced_stringResult = replaced_stringResult.replace("</li>;", "");
                 replaced_stringResult = replaced_stringResult.replace("<ul>", "");
                 replaced_stringResult = replaced_stringResult.replace("</ul>;", "");*/
-                Gson newGson = new Gson();
-                Books book_profile = newGson.fromJson(replaced_stringResult, Books.class);
 
+                //Serializa el json en un objeto de Android
+                Gson newGson = new Gson();
+                book_profile = newGson.fromJson(replaced_stringResult, Books.class);
+
+                //Genera dos strings que concatenan las categorías y tags del libro
                 List<Tags> book_tags = book_profile.getTags();
                 String tags = "";
                 for (int i = 0; i < book_tags.size(); i++){
@@ -116,7 +131,7 @@ public class BookProfile extends AppCompatActivity {
                     }
                 }
 
-
+                //Setea la información del libro en sus correspondientes Views
                 title.setText(book_profile.getTitle());
                 author.setText(book_profile.getAuthor());
                 publisher.setText(book_profile.getPublisher());
@@ -126,7 +141,9 @@ public class BookProfile extends AppCompatActivity {
                 stringCategories.setText("Categorías: " + categories);
                 stringTags.setText("Tags: " + tags);
                 bookContent.setText(book_profile.getContent_short());
-                new DownloadImageTask
+                new DownloadImageTask(bookPicture).execute(book_profile.getCover());
+                //Cambia la imagen del icono si el libro es un favorito o no
+                changeButtonIcon();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -138,6 +155,8 @@ public class BookProfile extends AppCompatActivity {
         AgregarRequest(request);
     }
 
+
+    //Esta clase permite que un ImageView muestre una imagen a partir de una URL
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
         public DownloadImageTask(ImageView bmImage) {
@@ -159,5 +178,41 @@ public class BookProfile extends AppCompatActivity {
         protected void onPostExecute(Bitmap result) {
             bmImage.setImageBitmap(result);
         }
+    }
+
+
+    //Permite configurar el icono del botón dependiendo de si el libro es un favorito o no
+    public void changeButtonIcon(){
+        List<FavoriteBooks> allBooks = FavoriteBooks.listAll(FavoriteBooks.class);
+
+        for (final FavoriteBooks favoriteBook : allBooks) {
+            //Si el libro existe en la base de datos, se setea el icono de eliminación
+            if (favoriteBook.getBook_id() == book_profile.getID()) {
+                Drawable d = ContextCompat.getDrawable(this, android.R.drawable.ic_menu_delete);
+                stateButton.setImageDrawable(d);
+                foundFavoriteBook = favoriteBook;
+                break;
+            }//Si el libro no existe, se setea el icono de agregar a favoritos
+            else {
+                Drawable d = ContextCompat.getDrawable(this, android.R.drawable.btn_star_big_on);
+                stateButton.setImageDrawable(d);
+                foundFavoriteBook = null;
+            }
+        }
+    }
+
+    //Cambia el estado del libro (Pasa a ser favorito o se elimina de los favoritos)
+    public void changeState(View v){
+
+        if(foundFavoriteBook == null){
+            FavoriteBooks new_book = new FavoriteBooks(book_profile.getID(), book_profile.getTitle(), book_profile.getAuthor());
+            new_book.save();
+            Toast.makeText(this, "Libro agregado con éxito", Toast.LENGTH_LONG).show();
+        }else {
+            foundFavoriteBook.delete();
+            Toast.makeText(this, "Libro eliminado con éxito", Toast.LENGTH_LONG).show();
+        }
+
+        changeButtonIcon();
     }
 }

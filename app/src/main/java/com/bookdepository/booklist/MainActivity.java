@@ -47,38 +47,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void getFavorites(View v){
-
+        Intent myIntent = new Intent(MainActivity.this, FavoriteBooksActivity.class);
+        startActivity(myIntent);
     }
-
-    /*public void getFavorites(View v){
-        String url = "http://www.etnassoft.com/api/v1/get/?id=589";
-        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String stringResult) {
-                String replaced_stringResult = stringResult.replace("([", "");
-                replaced_stringResult = replaced_stringResult.replace("]);", "");
-                replaced_stringResult = replaced_stringResult.replace("<strong>", "");
-                replaced_stringResult = replaced_stringResult.replace("</strong>;", "");
-                Gson newGson = new Gson();
-                Books book_profile = newGson.fromJson(replaced_stringResult, Books.class);
-                List<Tags> book_tags = book_profile.getTags();
-                String tags = "";
-                for (int i = 0; i < book_tags.size(); i++){
-                    if (!tags.isEmpty()){
-                        tags = tags + " ," + book_tags.get(i).getName();
-                    } else {
-                        tags = book_tags.get(i).getName();
-                    }
-                }
-                Log.i("Llamado", tags);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                //Toast.makeText(getBaseContext(), volleyError.toString(), Toast.LENGTH_SHORT).show();
-                Log.i("ErrorLlamado", volleyError.toString());
-            }
-        });
-        AgregarRequest(request);
-    }*/
 }

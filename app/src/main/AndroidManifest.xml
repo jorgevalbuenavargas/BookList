@@ -19,10 +19,11 @@
         <activity android:name=".CategoriesActivity"></activity>
         <activity android:name=".BooksActivity"></activity>
         <activity android:name=".BookProfile"></activity>
-        <meta-data android:name="DATABASE" android:value="intents.db" />
+        <activity android:name=".FavoriteBooksActivity"></activity>
+        <!--<meta-data android:name="DATABASE" android:value="bookList.db" />
         <meta-data android:name="VERSION" android:value="1" />
         <meta-data android:name="QUERY_LOG" android:value="true" />
-        <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="com.example" />
+        <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="com.example" />-->
     </application>
 
 </manifest>
