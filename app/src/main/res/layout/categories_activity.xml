@@ -9,13 +9,12 @@
     <ListView
         android:id="@+id/categoriesProfileText"
         style="@style/Widget.AppCompat.ListView"
-        android:layout_width="376dp"
-        android:layout_height="453dp"
+        android:layout_width="349dp"
+        android:layout_height="397dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="12dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.473"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/goBackButton" />
 
@@ -35,14 +34,14 @@
 
     <TextView
         android:id="@+id/categoriesTitle"
-        android:layout_width="304dp"
+        android:layout_width="272dp"
         android:layout_height="46dp"
         android:layout_marginEnd="32dp"
         android:layout_marginTop="32dp"
         android:text="Listado de categorías"
         android:textAlignment="center"
         android:textColor="@android:color/black"
-        android:textSize="30sp"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>

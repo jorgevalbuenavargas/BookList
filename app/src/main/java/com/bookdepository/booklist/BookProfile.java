@@ -183,9 +183,9 @@ public class BookProfile extends AppCompatActivity {
 
     //Permite configurar el icono del botón dependiendo de si el libro es un favorito o no
     public void changeButtonIcon(){
-        List<FavoriteBooks> allBooks = FavoriteBooks.listAll(FavoriteBooks.class);
+        List<FavoriteBooks> allFavoriteBooks = FavoriteBooks.listAll(FavoriteBooks.class);
 
-        for (final FavoriteBooks favoriteBook : allBooks) {
+        for (final FavoriteBooks favoriteBook : allFavoriteBooks) {
             //Si el libro existe en la base de datos, se setea el icono de eliminación
             if (favoriteBook.getBook_id() == book_profile.getID()) {
                 Drawable d = ContextCompat.getDrawable(this, android.R.drawable.ic_menu_delete);
